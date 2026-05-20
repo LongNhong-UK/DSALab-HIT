@@ -1,0 +1,125 @@
+#include <iostream>
+using namespace std;
+
+const int SIZE = 3;
+
+char board[SIZE][SIZE];
+
+void initBoard() {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            board[i][j] = ' ';
+        }
+    }
+}
+
+void drawBoard() {
+    cout << "\n";
+    for (int i = 0; i < SIZE; i++) {
+        cout << " ";
+        for (int j = 0; j < SIZE; j++) {
+            cout << board[i][j];
+
+            if (j < SIZE - 1)
+                cout << " | ";
+        }
+
+        cout << "\n";
+
+        if (i < SIZE - 1)
+            cout << "---|---|---\n";
+    }
+    cout << "\n";
+}
+
+bool checkWin(char player) {
+
+    // Check rows
+    for (int i = 0; i < SIZE; i++) {
+        if (board[i][0] == player &&
+            board[i][1] == player &&
+            board[i][2] == player)
+            return true;
+    }
+
+    // Check columns
+    for (int i = 0; i < SIZE; i++) {
+        if (board[0][i] == player &&
+            board[1][i] == player &&
+            board[2][i] == player)
+            return true;
+    }
+
+    // Check diagonals
+    if (board[0][0] == player &&
+        board[1][1] == player &&
+        board[2][2] == player)
+        return true;
+
+    if (board[0][2] == player &&
+        board[1][1] == player &&
+        board[2][0] == player)
+        return true;
+
+    return false;
+}
+
+bool isDraw() {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == ' ')
+                return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+
+    initBoard();
+
+    int row, col;
+    char currentPlayer = 'X';
+
+    while (true) {
+
+        drawBoard();
+
+        cout << "Player " << currentPlayer
+            << " nhap dong va cot (0-2): ";
+
+        cin >> row >> col;
+
+        // Validate move
+        if (row < 0 || row >= SIZE ||
+            col < 0 || col >= SIZE ||
+            board[row][col] != ' ') {
+
+            cout << "Nuoc di khong hop le!\n";
+            continue;
+        }
+
+        board[row][col] = currentPlayer;
+
+        // Check win
+        if (checkWin(currentPlayer)) {
+            drawBoard();
+            cout << "Player "
+                << currentPlayer
+                << " chien thang!\n";
+            break;
+        }
+
+        // Check draw
+        if (isDraw()) {
+            drawBoard();
+            cout << "Hoa!\n";
+            break;
+        }
+
+        // Switch player
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    return 0;
+}
